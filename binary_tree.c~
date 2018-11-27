@@ -1,0 +1,47 @@
+#include "binary_tree.h"
+
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+void IntIntBinaryTree_ctor(IntIntBinaryTree *tree) {
+    // TODO: Your implementation here
+}
+
+void IntIntBinaryTree_dtor(IntIntBinaryTree *tree) {
+    // TODO: Your implementation here
+}
+
+IntIntBinaryTreeNode *IntIntBinaryTree_insert(IntIntBinaryTree *tree, int key, int value) {
+    // TODO: Your implementation here
+}
+
+IntIntBinaryTreeNode *IntIntBinaryTree_find(IntIntBinaryTree *tree, int key) {
+    // TODO: Your implementation here
+}
+
+void IntIntBinaryTree_remove(IntIntBinaryTree *tree, IntIntBinaryTreeNode *node) {
+    // TODO: Your implementation here
+}
+
+
+// Private helper function
+static int IntIntBinaryTreeNode_print(const IntIntBinaryTreeNode *const node, const int indent) {
+	if(!node) return 0;
+	const int sizeRight = IntIntBinaryTreeNode_print(node->right, indent + 1);
+	for(int i = 0; i != indent; ++i)
+		printf("  ");
+	printf("%d: %d\n", node->key, node->value);
+	const int sizeLeft = IntIntBinaryTreeNode_print(node->left, indent + 1);
+	return sizeRight + sizeLeft + 1;
+}
+
+void IntIntBinaryTree_print(const IntIntBinaryTree *tree) {
+	assert(tree);
+	printf("IntIntBinaryTree: size = %d\n", tree->size);
+	const int size = tree->root
+		? IntIntBinaryTreeNode_print(tree->root, 0)
+		: 0;
+	if(size != tree->size)
+		printf("WARNING: tree size is not up-to-date, tree->size = %d, but actual size is %d\n", tree->size, size);
+}
