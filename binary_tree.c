@@ -21,29 +21,42 @@ IntIntBinaryTreeNode *IntIntBinaryTree_insert_find(IntIntBinaryTreeNode *node, i
   }
     return IntIntBinaryTree_insert_find(node->right, key);
   }
-  if (node->left == NULL){
+  if (node->key > key){
+    if (node->left == NULL){
+      return node;
+    }
+    return IntIntBinaryTree_insert_find(node->left, key);
+  }
+  else {
     return node;
   }
-  return IntIntBinaryTree_insert_find(node->left, key);
 }
 
 
 IntIntBinaryTreeNode *IntIntBinaryTree_insert(IntIntBinaryTree *tree, int key, int value) {
   struct IntIntBinaryTreeNode *n = malloc(sizeof(IntIntBinaryTreeNode));
-  n->key=key;
-  n->value=value;
-  tree->size++;
-  if (tree->root == NULL) {
+  n->key=key;                       // Set the key of the new node
+  n->value=value;                   // Set the value of the new node
+  
+  if (tree->root == NULL) {         // If the tree is empty set new node as root
     tree->root = n;
+    tree->size++;                     // Increase size of the tree
     return n;
   }
   IntIntBinaryTreeNode *par = IntIntBinaryTree_insert_find(tree->root, key);
+  if (par->key == key){
+    par->value = value;
+    free(n);
+    return par;
+  }
   if (par->key > key) {
     par->left = n;
   }
   else {
     par->right = n;
   }
+  n->parent = par;
+  tree->size++;                     // Increase size of the tree
   return n;
 }
 
@@ -61,7 +74,7 @@ IntIntBinaryTreeNode *IntIntBinaryTree_find(IntIntBinaryTree *tree, int key) {
     if (node->key < key) {
       node = node->right;
     }
-    if (node->key = key) {
+    if (node->key == key) {
       return node;
     }
   }
@@ -69,46 +82,58 @@ IntIntBinaryTreeNode *IntIntBinaryTree_find(IntIntBinaryTree *tree, int key) {
 
 void IntIntBinaryTree_remove(IntIntBinaryTree *tree, IntIntBinaryTreeNode *node) {
   IntIntBinaryTreeNode *temp;
-  // Is the node a left or right of its parent?
+  if (node->parent == NULL) {
+    
+    return;
+  }
+  // Is the node to the left or right of its parent?
   if (node->parent->left == node){
-    // Does the node have any childen with a higher key?
+    // Does the node have any childen with a higher key?"
     if (node->right != NULL) {
-      // Set that node's parent to be the parent of the note we are deleting
+      // Set that node's parent to be the parent of the note we are deleting"
       node->right->parent = node->parent;
       temp = node->right;
-      // Find the child of that node with the lowest key->
+      // Find the child of that node with the lowest key"
       while (temp->left != NULL){
 	temp = temp->left;
       }
-      // Attach the left subtree of the node we are deleting to that node->
+      // Attach the left subtree of the node we are deleting to that node"
       temp->left=node->left;
+      free(node);
+      tree->size--;
       return;
     }
-    // No nodes in the subtree have a higher key
+    // No nodes in the subtree have a higher key"
     if (node->left != NULL) {
       node->left->parent = node->parent;
       node->parent->left = node->left;
+      free(node);
+      tree->size--;
       return;
 	}
   }
   if (node->parent->right == node){
-    // Does the node have any childen with a lower key?
+    // Does the node have any childen with a lower key?"
     if (node->left != NULL) {
-      // Set that node's parent to be the parent of the note we are deleting
+      // Set that node's parent to be the parent of the note we are deleting"
       node->left->parent = node->parent;
       temp = node->left;
-      // Find the child of that node with the highest key.
+      // Find the child of that node with the highest key."
       while (temp->right != NULL){
 	temp = temp->right;
       }
-      // Attach the right subtree of the node we are deleting to that node.
+      // Attach the right subtree of the node we are deleting to that node."
       temp->right=node->right;
+      free(node);
+      tree->size--;
       return;
     }
-    // No nodes in the subtree have a higher key
+    // No nodes in the subtree have a lower key"
     if (node->right != NULL) {
       node->right->parent = node->parent;
       node->parent->right = node->right;
+      free(node);
+      tree->size--;
       return;
     }
   }
