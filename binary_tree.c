@@ -10,7 +10,11 @@ void IntIntBinaryTree_ctor(IntIntBinaryTree *tree) {
 }
 
 void IntIntBinaryTree_dtor(IntIntBinaryTree *tree) {
-    // TODO: Your implementation here
+  while(tree->root != NULL){
+    IntIntBinaryTree_remove(tree, tree->root);
+  }
+  free(tree);
+  return;
 }
 
 // find the node that should be the parent of the inserted node
@@ -83,7 +87,31 @@ IntIntBinaryTreeNode *IntIntBinaryTree_find(IntIntBinaryTree *tree, int key) {
 void IntIntBinaryTree_remove(IntIntBinaryTree *tree, IntIntBinaryTreeNode *node) {
   IntIntBinaryTreeNode *temp;
   if (node->parent == NULL) {
-    
+    if (node->left != NULL) {
+      tree->root = node->left;
+      temp = node->left;
+      while(temp->right != NULL) {
+	temp = temp->right;
+      }
+      temp->right = node->right;
+    }
+    else if (node->right != NULL) {
+      tree->root = node->right;
+      temp = node->right;
+      while(temp->left != NULL) {
+	temp = temp->left;
+      }
+      temp->left = node->left;
+    }
+    else {
+      tree->root = NULL;
+      free(node);
+      tree->size--;
+      return;
+    }
+    tree->root->parent = NULL;
+    free(node);
+    tree->size--;
     return;
   }
   // Is the node to the left or right of its parent?

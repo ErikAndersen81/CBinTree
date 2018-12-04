@@ -32,6 +32,13 @@ int main (void) {
     IntIntBinaryTree_print(tree);
   }
   else {printf("Trick question, there's no key 8...\n");}
-  
+  printf("Trying to remove root.\n");
+  IntIntBinaryTree_remove(tree, tree->root);
+  printf("\nThe tree now looks like this:\n");
+  IntIntBinaryTree_print(tree);
+  printf("trying to delete tree..\n");
+  IntIntBinaryTree_dtor(tree);
+  printf("\nThe tree now looks like this:\n");
+  IntIntBinaryTree_print(tree);
   return 0;
 }
